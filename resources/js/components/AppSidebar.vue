@@ -28,6 +28,11 @@ const mainNavItems: NavItem[] = [
         href: '/users',
         icon: User,
     },
+    {
+        title: 'Roles',
+        href: '/roles',
+        icon: User,
+    }
 
 ];
 
