@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 
@@ -11,6 +12,8 @@ class UserController extends Controller
 {
     public function index()
     {
+        Gate::authorize('user.view');
+
         return Inertia::render('User', [
             'users' => User::with('roles')
                 ->orderBy('created_at', 'desc')
@@ -21,6 +24,8 @@ class UserController extends Controller
 
     public function create()
     {
+        Gate::authorize('user.create');
+
         return Inertia::render('User/Create', [
             'roles' => Role::orderBy('name')->get(),
         ]);
@@ -28,6 +33,8 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        Gate::authorize('user.create');
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
@@ -53,6 +60,8 @@ class UserController extends Controller
 
     public function edit(string $id)
     {
+        Gate::authorize('user.update');
+
         return Inertia::render('User/Edit', [
             'user' => User::with('roles')->findOrFail($id),
             'roles' => Role::orderBy('name')->get(),
@@ -61,6 +70,8 @@ class UserController extends Controller
 
     public function update(Request $request, string $id)
     {
+        Gate::authorize('user.update');
+
         $user = User::findOrFail($id);
 
         $validated = $request->validate([
@@ -84,6 +95,8 @@ class UserController extends Controller
 
     public function destroy(string $id)
     {
+        Gate::authorize('user.delete');
+
         User::findOrFail($id)->delete();
 
         return redirect('/users');
